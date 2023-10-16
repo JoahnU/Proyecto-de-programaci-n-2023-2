@@ -1,10 +1,11 @@
 # Proyecto-de-programaci-n-2023-2
 
 
-Respositorio para el proyecto de programación
+Repositorio para el proyecto de programación
 
 
 Integrantes: 
+  
   -Sebastián Rojas
   
   -Samuel Luna
