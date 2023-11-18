@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-from math import hypot
+from math import hypot, pi
 from ctypes import cast, POINTER
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -44,16 +44,30 @@ while True:
         # x      #y
         x1, y1 = lmList[4][1], lmList[4][2]  # thumb
         x2, y2 = lmList[8][1], lmList[8][2]  # index finger
+        x3, y3 = lmList[0][1], lmList[0][2]
+
         # creating circle at the tips of thumb and index finger
-        cv2.circle(img, (x1, y1), 8, (0, 0, 0), cv2.FILLED)  # image #fingers #radius #rgb
-        cv2.circle(img, (x2, y2), 8, (0, 0, 0), cv2.FILLED)  # image #fingers #radius #rgb
-        cv2.line(img, (x1, y1), (x2, y2), (0, 0, 175), 3)  # create a line b/w tips of index finger and thumb
+        cv2.circle(img, (x1, y1), 5, (255, 0, 0), cv2.FILLED)  # image #fingers #radius #rgb
+        cv2.circle(img, (x2, y2), 5, (255, 0, 0), cv2.FILLED)  # image #fingers #radius #rgb
+        cv2.circle(img, (x3, y3), 5, (255, 0, 0), cv2.FILLED)
+        cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+        cv2.line(img, (x2, y2), (x3, y3), (250, 5, 0), 3)
+        cv2.line(img, (x1, y1), (x3, y3), (250, 5, 0), 3)  # create a line b/w tips of index finger and thumb
 
         length = hypot(x2 - x1, y2 - y1)  # distance b/w tips using hypotenuse
+        length2 = hypot(x3 - x1, y3 - y1)
+        length3 = hypot(x3 - x2, y3 - y2)
+
+        m1 = abs((y3 - y1) / (x3 - x1))  # pendiente de la linea entre el pulgar y la muñeca
+        m2 = abs((y3 - y2) / (x3 - x2))  # pendiente de la linea entre el indice y la muñeca
+
+        angle = np.arctan((m2 - m1) / (1 + (m1 * m2)))
+        angle = 2 * ((angle * 180) / pi)
+        
         # from numpy we find our length,by converting hand range in terms of volume range ie b/w -63.5 to 0
-        vol = np.interp(length, [30, 350], [volMin, volMax])
-        volbar = np.interp(length, [30, 350], [400, 150])
-        volper = np.interp(length, [30, 350], [0, 100])
+        vol = np.interp(angle, [6, 90], [volMin, volMax])
+        volbar = np.interp(angle, [6, 90], [400, 150])
+        volper = np.interp(angle, [6, 90], [0, 100])
 
         print(vol, int(length))
         volume.SetMasterVolumeLevel(vol, None)
@@ -61,8 +75,7 @@ while True:
         # Hand range 30 - 350
         # Volume range -63.5 - 0.0
         # creating volume bar for volume level
-        cv2.rectangle(img, (50, 150), (85, 400), (0, 0, 255),
-                      4)  # vid ,initial position ,ending position ,rgb ,thickness
+        cv2.rectangle(img, (50, 150), (85, 400), (0, 0, 255),4)  # vid ,initial position ,ending position ,rgb ,thickness
         cv2.rectangle(img, (50, int(volbar)), (85, 400), (0, 0, 255), cv2.FILLED)
         cv2.putText(img, f"{int(volper)}%", (10, 40), cv2.FONT_ITALIC, 1, (0, 255, 98), 3)
         # tell the volume percentage ,location,font of text,length,rgb color,thickness
