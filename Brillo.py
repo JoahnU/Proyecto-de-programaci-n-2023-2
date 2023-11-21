@@ -47,11 +47,12 @@ while True:
         length2 = hypot(x3 - x1, y3 - y1)
         length3 = hypot(x3 - x2, y3 - y2)
 
-        m1 = abs((y3 - y1) / (x3 - x1))  # pendiente de la linea entre el pulgar y la muñeca
-        m2 = abs((y3 - y2) / (x3 - x2))  # pendiente de la linea entre el indice y la muñeca
-
-        angle = np.arctan((m2 - m1) / (1 + (m1 * m2)))
-        angle = 2*((angle * 180) / pi)
+        try:
+            angle = np.arccos((length2 ** 2 + length3 ** 2 - length ** 2) / (2 * length2 * length3))
+        except:
+            angle = 0
+        print(f"Angle {angle}")
+        angle = 2 * ((angle * 180) / pi)
 
         bright = np.interp(angle, [6, 100], [0, 100])
 
