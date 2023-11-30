@@ -1,7 +1,6 @@
 import os
 import cv2
 import time
-import ctypes
 import pyautogui
 import numpy as np
 import mediapipe as mp
@@ -56,7 +55,7 @@ def menu():
             length_menique_pulgar = hypot(x13 - x53, y13 - y53)
             distancia_umbral = 40
 
-            if y23 < y22 and y33 > y32 and y43 > y42 and y53 > y52:  # 
+            if y23 < y22 and y33 > y32 and y43 > y42 and y53 > y52:  #
                 numero = "1"
                 num = 1
             elif y13 > y21 and y23 < y22 and y33 < y32 and y43 > y42 and y53 > y52 and x13 < x2:
@@ -157,7 +156,7 @@ def volume():
     cv2.destroyAllWindows()
 
 
-def bright():
+def brightness():
     cap = cv2.VideoCapture(0)
 
     mpHands = mp.solutions.hands
@@ -173,23 +172,23 @@ def bright():
         lmList = []
         if results.multi_hand_landmarks:
             for handlandmark in results.multi_hand_landmarks:
-                for id, lm in enumerate(handlandmark.landmark):  
+                for id, lm in enumerate(handlandmark.landmark):
                     h, w, _ = img.shape
                     cx, cy = int(lm.x * w), int(lm.y * h)
-                    lmList.append([id, cx, cy])  
+                    lmList.append([id, cx, cy])
                 mpDraw.draw_landmarks(img, handlandmark, mpHands.HAND_CONNECTIONS)
 
         if lmList != []:
-            x1, y1 = lmList[4][1], lmList[4][2]  
-            x2, y2 = lmList[8][1], lmList[8][2]  
+            x1, y1 = lmList[4][1], lmList[4][2]
+            x2, y2 = lmList[8][1], lmList[8][2]
             x3, y3 = lmList[0][1], lmList[0][2]
-            
-            cv2.circle(img, (x1, y1), 5, (255, 0, 0), cv2.FILLED)  
-            cv2.circle(img, (x2, y2), 5, (255, 0, 0), cv2.FILLED)  
+
+            cv2.circle(img, (x1, y1), 5, (255, 0, 0), cv2.FILLED)
+            cv2.circle(img, (x2, y2), 5, (255, 0, 0), cv2.FILLED)
             cv2.circle(img, (x3, y3), 5, (255, 0, 0), cv2.FILLED)
             cv2.line(img, (x1, y1), (x2, y2), (250, 5, 0), 3)
             cv2.line(img, (x2, y2), (x3, y3), (250, 5, 0), 3)
-            cv2.line(img, (x1, y1), (x3, y3), (250, 5, 0), 3)  
+            cv2.line(img, (x1, y1), (x3, y3), (250, 5, 0), 3)
 
             length = hypot(x2 - x1, y2 - y1)
             length2 = hypot(x3 - x1, y3 - y1)
@@ -209,52 +208,51 @@ def bright():
             current_brightness = sbc.get_brightness()
 
             brightness_text = int(current_brightness[0])
-            brightness_bar = np.interp(current_brightness, [6, 100], [400, 100])
+            brightness_bar = np.interp(current_brightness[0], [6, 100], [400, 100])
 
             cv2.rectangle(img, (50, 100), (85, 400), (0, 0, 255), 2)
             cv2.rectangle(img, (50, int(brightness_bar)), (85, 400), (0, 0, 255), cv2.FILLED)
-            # vid ,initial position ,ending position ,rgb ,thickness
             cv2.putText(img, f"{int(brightness_text)}%", (10, 65), cv2.FONT_ITALIC, 2, (255, 255, 255), 2)
             cv2.putText(img, "Brillo", (10, 470), cv2.FONT_ITALIC, 1.5, (255, 255, 255), 2)
-        cv2.imshow('Image', img)  
-        if cv2.waitKey(1) & 0xff == ord(' '):  
+        cv2.imshow('Image', img)
+        if cv2.waitKey(1) & 0xff == ord(' '):
             break
 
-    cap.release()  
+    cap.release()
     cv2.destroyAllWindows()
 
 
 def window():
-    cap = cv2.VideoCapture(0)  
+    cap = cv2.VideoCapture(0)
 
-    mpHands = mp.solutions.hands  
-    hands = mpHands.Hands()  
+    mpHands = mp.solutions.hands
+    hands = mpHands.Hands()
     mpDraw = mp.solutions.drawing_utils
 
     previous_command = None
 
     while True:
-        success, img = cap.read()  
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  
-        results = hands.process(imgRGB)  
+        success, img = cap.read()
+        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        results = hands.process(imgRGB)
 
-        lmList = []  
-        if results.multi_hand_landmarks:  
+        lmList = []
+        if results.multi_hand_landmarks:
             for handlandmark in results.multi_hand_landmarks:
-                for id, lm in enumerate(handlandmark.landmark):  
+                for id, lm in enumerate(handlandmark.landmark):
                     h, w, _ = img.shape
                     cx, cy = int(lm.x * w), int(lm.y * h)
-                    lmList.append([id, cx, cy])  
+                    lmList.append([id, cx, cy])
                 mpDraw.draw_landmarks(img, handlandmark, mpHands.HAND_CONNECTIONS)
 
         if lmList != []:
-            x1, y1 = lmList[4][1], lmList[4][2]  
-            x2, y2 = lmList[12][1], lmList[12][2] 
-            cv2.circle(img, (x1, y1), 8, (0, 0, 255), cv2.FILLED)  
-            cv2.circle(img, (x2, y2), 8, (0, 0, 255), cv2.FILLED) 
-            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 0), 3)  
+            x1, y1 = lmList[4][1], lmList[4][2]
+            x2, y2 = lmList[12][1], lmList[12][2]
+            cv2.circle(img, (x1, y1), 8, (0, 0, 255), cv2.FILLED)
+            cv2.circle(img, (x2, y2), 8, (0, 0, 255), cv2.FILLED)
+            cv2.line(img, (x1, y1), (x2, y2), (0, 0, 0), 3)
 
-            length = hypot(x2 - x1, y2 - y1)  
+            length = hypot(x2 - x1, y2 - y1)
             # Distancia umbral
             threshold_distance = 100
 
@@ -273,12 +271,12 @@ def window():
                 previous_command = current_command
 
         cv2.putText(img, "Video", (10, 470), cv2.FONT_ITALIC, 1.5, (255, 255, 255), 2)
-        cv2.imshow('Image', img)  
-        if cv2.waitKey(1) & 0xff == ord(' '):  
+        cv2.imshow('Image', img)
+        if cv2.waitKey(1) & 0xff == ord(' '):
             break
 
-    cap.release()  
-    cv2.destroyAllWindows()  
+    cap.release()
+    cv2.destroyAllWindows()
 
 
 def calculadora():
@@ -390,7 +388,7 @@ def calculadora():
             if cv2.waitKey(1) & 0xff == ord(' '):
                 break
 
-        cap.release()  
+        cap.release()
         cv2.destroyAllWindows()
         return num
 
@@ -433,25 +431,24 @@ def calculadora():
 
 
 def off():
+    cap = cv2.VideoCapture(0)
 
-    cap = cv2.VideoCapture(0)  
-
-    mpHands = mp.solutions.hands  
-    hands = mpHands.Hands()  
+    mpHands = mp.solutions.hands
+    hands = mpHands.Hands()
     mpDraw = mp.solutions.drawing_utils
 
     while True:
-        success, img = cap.read()  
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  
-        results = hands.process(imgRGB)  
+        success, img = cap.read()
+        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        results = hands.process(imgRGB)
 
-        lmList = []  
-        if results.multi_hand_landmarks:  
+        lmList = []
+        if results.multi_hand_landmarks:
             for handlandmark in results.multi_hand_landmarks:
-                for id, lm in enumerate(handlandmark.landmark):  
+                for id, lm in enumerate(handlandmark.landmark):
                     h, w, _ = img.shape
                     cx, cy = int(lm.x * w), int(lm.y * h)
-                    lmList.append([id, cx, cy])  
+                    lmList.append([id, cx, cy])
                 mpDraw.draw_landmarks(img, handlandmark, mpHands.HAND_CONNECTIONS)
 
         if lmList != []:
@@ -464,14 +461,14 @@ def off():
                 os.system("shutdown /s /t 1")
                 break
 
-        cv2.imshow('Image', img)  
+        cv2.imshow('Image', img)
         cv2.putText(img, "Apagado", (10, 470), cv2.FONT_ITALIC, 1.5, (255, 255, 255), 2)
-        if cv2.waitKey(1) & 0xff == ord(' '):  
+        if cv2.waitKey(1) & 0xff == ord(' '):
             break
 
-    cap.release()  
+    cap.release()
 
-    cv2.destroyAllWindows()  
+    cv2.destroyAllWindows()
 
 
 # Menu principal
@@ -487,7 +484,7 @@ while z != 6:
     if z == 1:
         volume()
     elif z == 2:
-        bright()
+        brightness()
     elif z == 3:
         window()
     elif z == 4:
