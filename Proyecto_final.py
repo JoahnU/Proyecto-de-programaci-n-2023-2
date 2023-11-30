@@ -1,3 +1,9 @@
+# Hecho por: 
+# Joahn Hernandez
+# Sebastian Rojas
+# Juan Gomez
+
+
 import os
 import cv2
 import time
